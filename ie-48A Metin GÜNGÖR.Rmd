@@ -1,0 +1,52 @@
+---
+title: ''
+author: "İE-48A"
+date: "8/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assignment 1: RMarkdown Homework
+
+*Metin Yüksel GÜNGÖR*
+
+*05.08.2020*
+
+
+ I am Metin Yüksel GÜNGÖR. I am a senior student at BOUN. I watched some videos about R-Studio in Udemy at the beginning of the quarantine. Generally, i guess i have not much interest about that data stuff, but  my interest may increase over time. I am going to make an effort about that. Therefore, i don't know whether i will use data science skills in the future. 
+ 
+ [My Linkedin profile](https://www.linkedin.com/in/meti1274647aa184/)
+ 
+ UseR-2020's video i watched at youtube;
+ 
+ [useR! 2020: Privacy protected maps using adaptive kernel density estimation (E. de Jonge), lightning](https://www.youtube.com/watch?v=M10SmUs68x4)
+ 
+ 
+# Data visualization
+
+ In this video, the lecturer gives us information about how to construct line graph for time series data and adjust the attributes of the graphs. Also the lecturer shows us that for interacting with the graph that will enable us to produce quality publication level graphical display. 
+ 
+ [Data visualization using R studio](https://www.youtube.com/watch?v=kQYbt_4jCQQ)
+ 
+ 
+# Creating and enhancing histogram using ggplot package
+
+ This video is about creating histogram and enhancing it using ggplot package. In this video, i saw there are many useful features in ggplot package  which we can use and make our chart very understandable and interactive. 
+ 
+ [R Tutorial | Creating and enhancing histogram using ggplot package | R Programming | ggplot](https://www.youtube.com/watch?v=O0795X63_gw)
+ 
+ 
+# Using the Data Frame in R
+
+ The lecturer gives us basic information about R programming. He sad that data frames are the fundamental data structure to store typical data sets. data frames are pretty similar to matrixes, but  the big difference with matrices is that a data frame can contain elements of different types. Also, data frames are really important in creating data set. 
+ 
+ [R Tutorial - Using the Data Frame in R](https://www.youtube.com/watch?v=9f2g7RN5N0I)
+ 
+ 
+ 
+ 
+ 
+ 
