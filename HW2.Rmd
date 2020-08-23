@@ -1,0 +1,165 @@
+---
+title: "Homework 2"
+author: "Metin Yüksel GÜNGÖR"
+date: "8/21/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+ In this report, I am going to analyze the electricity prices 01 July to 31 July 2020 which getting from EPIAS using only MCP/SMP data. The data link is [here](https://rapor.epias.com.tr/rapor/xhtml/ptfSmfListeleme.xhtml;jsessionid=0elgpSR57O6UzVN3bghcFC17OCr9zytRX84_ETGh.prd-rapor-n41)
+ 
+ Also you can access the data via my github account.
+ 
+ 
+## Package Installation
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+```
+
+
+## Importing the Data
+
+ After the downloading, i imported the data which i called *data1*. Then, we can observe the data with glimpse() funcion.
+
+
+```{r}
+getwd()
+setwd("C:/Users/Metin/Documents/R-Data")
+data1 = read.csv("ptf-smf (2).csv")
+data1 %>% glimpse()
+
+```
+
+## Regulation
+
+ After using glimpse() function, we see that columns's names are unclear, and data field's type is string. Therefore, in this part, i changed the type of that columns, and renamed that. Also, i transformed the date times to usable forms. Then, i renamed that *data2*.
+ 
+
+```{r}
+data1$PTF = as.numeric(gsub(",", ".", data1$PTF))
+data1$SMF = as.numeric(gsub(",", ".", data1$SMF))
+data1$Pozitif.Dengesizlik.Fiyat..TL.MWh. = as.numeric(gsub(",", ".", data1$Pozitif.Dengesizlik.Fiyat..TL.MWh. ))
+data1$Negatif.Dengesizlik.Fiyat..TL.MWh. = as.numeric(gsub(",", ".",  data1$Negatif.Dengesizlik.Fiyat..TL.MWh.))
+data1$Tarih = gsub(pattern = "\\.", "-", data1$Tarih)
+
+data2 = data1 %>%
+  select(Date = Tarih, MCP = PTF, SMP = SMF, Negative_Imbalance_Price = Negatif.Dengesizlik.Fiyat..TL.MWh., Pozitive_Imbalance_Price = Pozitif.Dengesizlik.Fiyat..TL.MWh., Energy_Balance = SMF.Yön) %>%
+  mutate(DateTime = as.POSIXct(factor(Date), format = "%d-%m-%y %H:%M")) %>%
+  mutate(Day = wday(DateTime, week_start = 1), Hour = hour(DateTime), Date = as.Date(Date, format = "%d-%m-%y %H:%M"))
+data2 %>% glimpse()
+```
+
+  At the end of this process, we have 3 new columns which include the date information.
+
+# Analysis
+
+ After the regulation, the data has usable date information. Finally, we can analyze the data. I will analyze the data as days and hours. Also, I prefer to analyze the data MCP and SMP separately.
+  
+
+## MCP
+
+  Firstly, the information is assigned to a variable. Then, the plot is created to show the daily averages of MCP.
+
+
+```{r}
+MCPdaily = data2 %>% 
+  group_by(Day) %>%
+  summarize(Average = mean(MCP))
+MCPdaily %>% glimpse()
+
+```
+```{r}
+ggplot(MCPdaily, aes(Day, Average)) + 
+  geom_col() +
+  expand_limits(y = 0)
+```
+
+  When we look the plot, we see that MCP values are nearly equal. But, Sunday has a little of decreasing. As the second step of this part, i caried out these processes for hour, too.
+
+
+```{r}
+MCPhourly = data2 %>% 
+  group_by(Hour) %>%
+  summarize(Average = mean(MCP))
+MCPhourly %>% glimpse()
+```
+
+```{r}
+ggplot(MCPhourly, aes(Hour, Average)) + 
+  geom_line() +
+  expand_limits(y = 0)
+```
+  
+  Except 05:00 - 06:30, the average MCP values are are looking very close. Around 06:00, it has the lowest average value.
+
+```{r}
+options(tibble.print_max = 10)
+data2 %>% 
+  group_by(Hour) %>%
+  top_n(1, MCP) %>%
+  select(Hour, MCP) %>%
+  arrange(desc(MCP))
+```
+
+  The highest 10 MCP values are shown at the above table.
+  
+## SMP
+
+ Like the first part(MCP), i assigned the information to a variable for SMP column. Then, i created a plot that shows the daily averages of SMP.
+
+```{r}
+SMPdaily = data2 %>% 
+  group_by(Day) %>%
+  summarize(Average = mean(SMP))
+SMPdaily %>% glimpse()
+```
+
+```{r}
+ggplot(SMPdaily, aes(Day, Average)) + 
+  geom_col() +
+  expand_limits(y = 0)
+```
+
+ According to the plot, it can be easily understood that on Monday, Tuesday, and Saturday daily averages of SMP are higher values than the other values. On the other hand, it has the lowest value on Wednesday. Afterthat, we can have that observation for hour, too.
+
+
+```{r}
+SMPhourly = data2 %>% 
+  group_by(Hour) %>%
+  summarize(Average = mean(SMP))
+SMPhourly %>% glimpse()
+```
+
+```{r}
+ggplot(SMPhourly, aes(Hour, Average)) + 
+  geom_line() +
+  expand_limits(y = 0)
+```
+
+  When we look at the above plot, like the average MCP values, araound 06:00, the average SMP values have very lower values than the other hours. For the other hours, they are looking closer values each other.
+  
+
+```{r}
+options(tibble.print_max = 10)
+data2 %>% 
+  group_by(Hour) %>%
+  top_n(1, SMP) %>%
+  select(Hour, SMP) %>%
+  arrange(desc(SMP))
+
+```
+
+  The highest 10 SMP values are shown at the above table.
+  
+  
+
+  
