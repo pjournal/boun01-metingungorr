@@ -1,0 +1,431 @@
+---
+title: "Diamonds"
+author: "Metin Yüksel GÜNGÖR"
+date: "9/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# General Informations
+
+  Diamond is a solid form of the element carbon with its atoms arranged in a crystal structure called diamond cubic. Diamond, the most famed and fabled of all gemstones, is very unique in many ways. Renowned for being the hardest substance on earth, its sparkling fire, durability, and rarity make Diamond the most prized of all gems.
+  
+  There are five main factors that should be kept in mind while comparing the prices of diamonds. These include Shape, Cut, Color, Clarity, and Carat. Excellence of each of these factors makes the difference in the price of a diamond.
+  
+  **1) Shape**
+  
+  There are many shapes of diamonds available in the marketplace. Most common shapes are round, princess, oval, asscher, emerald, radiant, cushion, marquise, and pear. Selecting the shape of a diamond depends on your preference, but it would be the first step in comparing the prices of diamonds.
+  
+  [Click here for more information.](https://www.petragems.com/education/diamond-shapes/)
+  
+  ![Types of Shapes](https://www.14karatomaha.com/images/uploads/content/diamond_shape-1.jpg){#id .class width=500 height=300}
+  
+  **2) Cut**
+  
+  In generally, the second important factor in determining the price a diamond is the Cut of a diamond. The brilliance of a diamond highly depends on its cut.
+ Here is an outline that will assist you in understanding the The Gemological Institute of America (GIA)’s cut grading system and what differentiates an excellent from a good or fair cut.
+
+ **Excellent**: This category has high scintillation, brilliance and an even pattern of dark and light areas.
+
+ **Very good**: While this grade has high scintillation and brilliance, they are darker n the edges or the centre. Sometimes, a diamond can have a higher scintillation and brilliance, but the grade lowered by its pattern.
+
+ **Good**: This category is a bit dark and has lower scintillation. A diamond can be downgraded by its weight ratio or pattern.
+
+ **Fair**: A gem in this grade has little scintillation and brilliance.
+
+ **Poor**: Gems in this grade have extremely poor proportions and display little scintillation or brilliance.
+ 
+ [Click here for more information.](https://www.petragems.com/education/diamond-cut/)
+ 
+ ![Cut Grading System](https://eternitygoldstore.com/wp-content/uploads/2018/12/cut2.jpg)
+
+  **3) Carat**
+  
+  The third important factor is the Carat Weight of a diamond. Carat is the weighing scale for any diamond and the greater the weight, the expensive it is. Diamonds that weigh below a full carat are generally less expensive than ones that are above a full carat.
+  
+  [Click here for more information.](https://www.petragems.com/education/diamond-carat-weight/)
+  
+  ![Carat Weight Chart](https://www.diamondbuild.co.uk/wp-content/uploads/2019/09/Diamond-Carat-Weight-e1568670077870.jpg){#id .class width=600 height=200}
+ 
+  **4) Color**
+  
+  The fourth important factor in determining the price of a diamond is the Color of a diamond. Colors of white diamonds range from Colorless to Light Yellow. Being rare, Colorless diamonds are the most expensive ones. There are 22 grades of diamond color from D to Z, D being colorless and most expensive and Z being least desirable that is light yellow or close to Yellow.
+  
+  [Click here for more information.](https://www.petragems.com/education/diamond-color/)
+  
+  ![Color Scale](https://www.petragems.com/product_images/uploaded_images/diamond-color-scale.png)
+  
+  **5) Clarity**
+  
+  The fifth factor in determining the price of a diamond is the Clarity of a diamond. Eye-clean clarity means that the inclusions are not noticeable with an unaided eye. Clarity grading determines the amount of inclusions within a diamond. Clarity is assessed based off The Gemological Institute of America (GIA)'s grading scale that ranges from Flawless or FL to included 3 or I3.
+  
+  [Click here for more information.](https://www.petragems.com/education/diamond-clarity/)
+  
+  ![Clarity Scale](https://www.petragems.com/product_images/uploaded_images/diamondclarityscalegia.jpg){#id .class width=900 height=170}
+
+# Activation of Packages
+
+```{r}
+
+library(tidyverse)
+library(ggplot2)
+library(corrplot)
+library(rpart)
+library(rpart.plot)
+library(caret)
+
+```
+
+
+# Overview of Data
+
+```{r}
+
+glimpse(diamonds)
+
+```
+  
+```{r}
+
+summary(diamonds)
+
+```
+  
+  The data set has 53,940 observations and 10 variables. These variables are;
+  
+  **Carat**: weight of the diamond (between 0.2 and 5.01) 
+  
+  **Cut**: quality of the cut (fair, good, very good, premium, ideal) worst to best
+  
+  **Color**: color of the diamond (D, E, F, G, H, I, J) worst to best
+  
+  **Clarity**: clarity of the diamond (SI1, VS2, SI2, VS1, VVS2, VVS1, other) 
+  
+  **Depth**: total depth percentage ( z / ((x+y)/2) ) (between 43 and 79)
+  
+  **Table**: diamond crown width relative to diamond's widest point (between 43 and 95)
+  
+  **Price**: price in US dollars (between 326 and 18823)
+  
+  **X**: length of the diamond in mm (between 0 and 10.74)
+  
+  **Y**: width of the diamond in mm (between 0 and 58.9)
+  
+  **Z**: depth of the diamond in mm (between 0 and 31.8)
+  
+  
+# Exploration of Data
+
+ As i mentioned in general information, our data has four main factors(except shape) that should be kept in mind while comparing the prices of diamonds. So, let's make clear the characteristics of this four variables of the data and what is in the dataset.
+ 
+## Carat
+
+  In this data set, the carat states the weight of the diamond. In this below table, the most preferred carats are shown.
+  
+```{r}
+
+diamonds %>%
+  mutate(carat = factor(carat)) %>%
+  group_by(carat) %>%
+  summarise(caratnumber = n()) %>%
+  arrange(desc(caratnumber)) %>%
+  head(10) %>%
+  ggplot(., aes(y=caratnumber, x = reorder(carat, -caratnumber), fill = carat)) +
+  geom_col()+
+  labs(title = "The Most Preferred Carats",
+       x = "Carat",
+       y = "Total Number")
+
+```
+  
+  According to the plot, the most preferred carat is 0.3 and the 10th carat is 0.71. 
+  
+  And in the below table; total numbers, min prices, average prices, and max prices are shown of diamonds ordered by carats.
+  
+```{r}
+
+diamonds %>%
+  group_by(carat) %>%
+  summarise(TotalNumber = n(),
+            MinPrice = min(price),
+            AveragePrice = mean(price),
+            MaxPrice = max(price))
+
+```
+  
+## Cut
+
+  There 5 types of cut qualities. These are; Fair, Good, Very Good, Premium, and Ideal(from worst to best). The pie chart shows us most of diamonds have ideal cut type. And the worst cut type Fair has the lowest total number. Also, total number of very good type and good type are seen pretty close.
+
+```{r}
+
+diamonds %>%
+  group_by(cut) %>%
+  summarise(Totalnumber = n()) %>%
+  ggplot(., aes(x = '', y = Totalnumber, fill = cut)) + 
+    geom_bar(stat = "identity", width = 1, alpha = 0.7) +
+    coord_polar("y")+
+   labs(title = "Total Numbers of Cut's Qualities ",
+        x = "",
+        y = "",
+        fill = "Quality Types")
+  
+```
+
+  When we look at the below table, we can see that Fair and Premium cut quality types have highest average prices. According to this, We can understand that Cut is not the most important factor at setting the price. Also, the max and min prices of each type are pretty close. 
+
+```{r}
+
+diamonds %>%
+  group_by(cut) %>%
+  summarise(TotalNumber = n(),
+            MinPrice = min(price),
+            AveragePrice = mean(price),
+            MaxPrice = max(price))
+
+```
+
+## Color
+
+  According to the below plot, in the data, there is most G color type which is the most colorless, and least J color type.
+
+```{r}
+
+diamonds %>%
+  group_by(color) %>%
+  summarise(colornumber = n(),
+            AveragePrice = mean(price)) %>%
+  ggplot(.,aes(x = color, y = colornumber, color = AveragePrice)) +
+  geom_point(size=5) +
+    geom_segment(aes(x=color,
+                     xend=color,
+                     y=0,
+                     yend=colornumber))+
+  labs(title = "Total Number of Colors",
+       x = "Color",
+       y = "Total Number")
+
+```
+
+  For every Color type, Max prices and min prices are nearly equal. But, in average prices, there are serious differences. J(the most colorful) has the max average price, and D(the least colorful) has the min average price.
+  
+```{r}
+
+diamonds %>%
+  group_by(color) %>%
+  summarise(TotalNumber = n(),
+            MinPrice = min(price),
+            AveragePrice = mean(price),
+            MaxPrice = max(price))
+
+```
+
+## Clarity
+
+  Clarity is the last one of the four Cs of diamond grading, as i indicated, the others are carat, color, and cut. In the below chart, 8 clarity grades are shown. SI1, VS2, VS1, and SI2 grades are more preferred than the other gradees. Also, these grades average prices are higher than the others.
+
+```{r}
+
+diamonds %>%
+  group_by(clarity) %>%
+  summarise(claritynumber = n(),
+            AveragePrice = mean(price)) %>%
+  ggplot(.,aes(x = clarity, y = claritynumber, color = AveragePrice)) +
+  geom_point(size=5) +
+    geom_segment(aes(x=clarity,
+                     xend=clarity,
+                     y=0,
+                     yend=claritynumber))+
+  labs(title = "Total Number of each Clarity Grade",
+       x = "Clarity",
+       y = "Total Number")
+
+```
+
+  When we look at the below table, we can see that SI2 clarity grade has the highest average price, then SI1, VS2, and I1 are nearly equal. Also, the max and min prices of each clarity grades are pretty close. 
+
+```{r}
+
+diamonds %>%
+  group_by(clarity) %>%
+  summarise(TotalNumber = n(),
+            MinPrice = min(price),
+            AveragePrice = mean(price),
+            MaxPrice = max(price))
+
+```
+
+## Price 
+
+  According to this histogram, the price distribution is right skewed.
+
+```{r}
+
+diamonds %>%
+  ggplot(aes(x = price))+
+  geom_histogram(binwidth = 300)+
+  geom_density()+
+  labs(title = "Price Histogram")
+
+```
+  
+
+
+## The Relationships between Price and Variables
+
+  In these plots, the linear relationships between price and data's variables are shown.
+
+```{r}
+
+diamonds %>% 
+  gather(-carat, -cut, -color, -clarity, -price, key = "variance", value = "value") %>% 
+  ggplot(aes(x = value, y = price))+ 
+  geom_point()+
+  geom_smooth(formula= y~x, method='lm')+
+  facet_wrap(~variance, scales = "free")
+
+```
+
+## Correlations
+
+  This correlation matrix is formed to indicate the strength of the relationship among all numerical variables. According to this matrix, price, carat, x, y, and z variables have significantly positive relationship with each other. On the other hand, depth and table variables have a low negative correlation.
+
+```{r}
+
+diamonds_numerical <- diamonds %>% select(-cut, -color, -clarity)
+
+diamonds_correlation <- round(cor(diamonds_numerical), 1)
+
+corrplot.mixed(diamonds_correlation)
+
+```
+
+# Creating Models
+
+## Training and Test Data Sets
+
+  To form a prediction model for prices of the diamonds, firstly, we should create training and test data sets.
+  
+  The first table includes a sample from train data set.
+
+```{r}
+
+set.seed(503)
+
+diamonds_test <- diamonds %>% mutate(diamond_id = row_number()) %>% 
+    group_by(cut, color, clarity) %>% sample_frac(0.2) %>% ungroup()
+
+diamonds_train <- anti_join(diamonds %>% mutate(diamond_id = row_number()), 
+    diamonds_test, by = "diamond_id")
+
+diamonds_train = diamonds_train[, c(-ncol(diamonds_train))]
+diamonds_test = diamonds_test[, c(-ncol(diamonds_test))]
+
+diamonds_train
+
+```
+
+  And, the second table includes a sample from test data set.
+
+```{r}
+
+diamonds_test
+
+```
+
+## Multiple Linear Regression
+
+```{r}
+
+linear_model <- lm(price ~ carat + cut + color + clarity, data = diamonds_train)
+summary(linear_model)
+
+```
+
+ The first step in interpreting the multiple regression analysis is to examine the F-statistic and the associated p-value, at the bottom of model summary.
+
+ For this data, it can be seen that p-value of the F-statistic is < 2.2e-16, which is highly significant. This means that, at least, one of the predictor variables is significantly related to the outcome variable.
+
+ To see which predictor variables are significant, we should examine the coefficients table, which shows the estimate of regression beta coefficients and the associated t-statitic p-values:
+
+```{r}
+
+summary(linear_model)$coefficient
+
+```
+
+## CART
+
+  When we look at the below plot of a tree, we see that carat, clarity, and y variables are used for branching. So, these variables are better to decrease the variance in the data. If we make a cross validation for cp value, we can get a more detailed tree plot.
+  
+```{r}
+
+rpart_model <- rpart(price ~ ., data = diamonds_train)
+
+prp(rpart_model)
+
+```
+
+  As can be seen in the figure below, using 0.001 value for cp is better than other cp values.
+
+```{r}
+
+train_control = trainControl(method = "cv", number = 10)
+
+cp_grid = expand.grid( .cp = (1:10)*0.001)
+
+train = train(price~. - carat - cut - color - clarity, data = diamonds_train, method = "rpart", trControl = train_control, tuneGrid = cp_grid)
+
+train
+
+```
+
+  The second plot tree is more detail. According to this plot of tree, the price is setting in regard to carat, clarity, y, and color variables. We can compare these two tree plot with their R^2 values.
+  
+```{r}
+
+rpart_model2 <- rpart(price ~ ., data = diamonds_train, cp = 0.001)
+
+prp(rpart_model2)
+
+
+```
+ 
+  According to these below calculations, we can say that the second CART model is better.
+  
+```{r}
+
+rpart_model_prediction <- predict(rpart_model, newdata = diamonds_test)
+
+rpart_model_r2 <- 1 - (sum((rpart_model_prediction - diamonds_test$price) ^ 2 ) / sum((diamonds_test$price - mean(diamonds_train$price)) ^ 2))
+
+rpart_model_r2
+
+```
+  
+```{r}
+
+rpart_model2_prediction <- predict(rpart_model2, newdata = diamonds_test)
+
+rpart_model2_r2 <- 1 - (sum((rpart_model2_prediction - diamonds_test$price) ^ 2 ) / sum((diamonds_test$price - mean(diamonds_train$price)) ^ 2))
+
+rpart_model2_r2
+
+```
+  
+
+# References
+
+  [Wikipedia](https://en.wikipedia.org/wiki/Diamond)
+  
+  [Petragems Diamonds Price Factors](https://www.petragems.com/education/comparing-diamond-prices-seven-important-factors/)
+  
+  [cran.r-project "corrplot" Package](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html)
+  
+  [STHDA - Regression Analysis](http://www.sthda.com/english/articles/40-regression-analysis/168-multiple-linear-regression-in-r/)
+  
+  [STHDA - CART Model](http://www.sthda.com/english/articles/35-statistical-machine-learning-essentials/141-cart-model-decision-tree-essentials/)
+  
