@@ -3,7 +3,7 @@
 # Assignment 2
 [Electricity Market Prices](https://pjournal.github.io/boun01-metingungorr/HW2.html)
 # Assignment 3
-[Diamonds](https://github.com/pjournal/boun01-metingungorr/blob/gh-pages/diamonds.html)
+[Diamonds](https://github.com/pjournal/boun01-metingungorr/blob/gh-pages/diamonds.Rmd)
 # Group Homework
 Analyzing the New York City Airbnb Open Data obtained from [Kaggle](https://www.kaggle.com/dgomonov/new-york-city-airbnb-open-data). Data includes information about accommodation places such as their prices, host names, mininum nights to stay, review statistics, availabilities ,room types, latitudes, longitudes, in which neighbourhood & neighbourhood group they are.
 [New York City Airbnb](https://pjournal.github.io/boun01g-r-ammstein/GroupAssignment.html)
