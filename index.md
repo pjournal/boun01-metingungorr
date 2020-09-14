@@ -18,5 +18,5 @@ Data is obtained from [TUIK site](https://biruni.tuik.gov.tr/medas/?kn=112&local
 * [Presentation](https://pjournal.github.io/boun01g-r-ammstein/GroupProject-MarriageStatistics-IE48A.pdf).
 # Bonus Group Homework
 Explaining and providing both written and lived video tutorials about Golem package.
-* Written Tutorial.
+* [Written Tutorial](https://pjournal.github.io/boun01g-r-ammstein/Golem-Package.html).
 * [Video Tutorial](https://github.com/pjournal/boun01g-r-ammstein/blob/gh-pages/golem.mp4?raw=TRUE)/[Youtube Link](https://www.youtube.com/watch?v=W48Q_3MU9y4&ab_channel=metiny%C3%BCkselg%C3%BCng%C3%B6r).
